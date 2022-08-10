@@ -1,19 +1,52 @@
-import { useState, useEffect} from 'react';
+import {useEffect, useState} from "react";
 import './App.css';
+import SearchIcon from './search.svg';
+import MovieCard from "./MovieCard";
 
-const App = ()=>{
-  const [counter, setCounter] = useState(0);
+const API_URL = 'http://www.omdbapi.com?apikey=95fdfdd9'
 
-  useEffect(()=>{
-   alert("You've changed the counter to "+ counter);
-  }, [counter]);
-  return (
-    <div className="App">
-      <button onClick={() => {setCounter((prevCount)=> prevCount-1)}}>-</button>
-      <h1>{counter}</h1>
-      <button onClick={() => {setCounter((prevCount)=> prevCount+1)}}>+</button>
-    </div>
-  );
+const App = () => {
+
+    const [movies, setMovies] = useState([]);
+
+    const searchMovies = async(title) => {
+        const response = await fetch(`${API_URL}&s=${title}`);       
+        const data = await response.json();
+        setMovies(data.Search);
+    }
+
+    useEffect(()=> {
+        searchMovies('The Fall');
+    }, []);
+    return (
+        <div className="app">
+            <h1>MoviePlanet</h1>
+            <div className="search">
+                <input 
+                placeholder="Search for the movie" 
+                value="Superman"
+                onChange={() => {}}/>
+                <img 
+                src={SearchIcon}
+                alt="search"/>
+            </div>
+            {
+                movies?.length>0
+                ?(
+                    <div className="container">
+                        {movies.map((movie)=>(
+                            <MovieCard movie={movie}/>
+                        ))}
+                    </div>
+                ):
+                (
+                    <div className="empty">
+                        <h2>No movies found</h2>
+                    </div>
+                )
+            }
+
+        </div>
+    );
 }
-
 export default App;
