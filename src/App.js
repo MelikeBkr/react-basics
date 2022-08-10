@@ -8,6 +8,7 @@ const API_URL = 'http://www.omdbapi.com?apikey=95fdfdd9'
 const App = () => {
 
     const [movies, setMovies] = useState([]);
+    const [keyword, setKeyword] = useState('');
 
     const searchMovies = async(title) => {
         const response = await fetch(`${API_URL}&s=${title}`);       
@@ -16,7 +17,7 @@ const App = () => {
     }
 
     useEffect(()=> {
-        searchMovies('The Fall');
+        searchMovies({keyword});
     }, []);
     return (
         <div className="app">
@@ -24,11 +25,12 @@ const App = () => {
             <div className="search">
                 <input 
                 placeholder="Search for the movie" 
-                value="Superman"
-                onChange={() => {}}/>
+                value={keyword}
+                onChange={(e) => {setKeyword(e.target.value);}}/>
                 <img 
                 src={SearchIcon}
-                alt="search"/>
+                alt="search"
+                onClick={()=> searchMovies(keyword)}/>
             </div>
             {
                 movies?.length>0
